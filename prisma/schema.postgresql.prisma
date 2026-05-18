@@ -1,0 +1,39 @@
+// Use this schema for Vercel + PostgreSQL production.
+// 1. Copy this file over schema.prisma (or swap provider/url)
+// 2. Set DATABASE_URL to your Postgres connection string
+// 3. Run: npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  prompts      Prompt[]
+}
+
+model Prompt {
+  id        String   @id @default(cuid())
+  content   String
+  topic     String
+  task      String
+  taskOther String?
+  level     String
+  format    String
+  extra     String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
