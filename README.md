@@ -36,13 +36,15 @@ Open [http://localhost:3000](http://localhost:3000) → create an account → st
 
 ## Deploy to Vercel (PostgreSQL)
 
-1. Create a [Vercel Postgres](https://vercel.com/storage/postgres) (or Neon) database.
-2. Copy `prisma/schema.postgresql.prisma` → `prisma/schema.prisma` (change `provider` to `postgresql`).
-3. Set env vars in Vercel:
-   - `DATABASE_URL` — Postgres connection string
+1. Install **Prisma Postgres** on Vercel and **connect it to your project** (Production + Preview).
+2. In **Settings → Environment Variables**, ensure **`DATABASE_URL`** exists:
+   - If you used prefix `STORAGE`, copy **`STORAGE_URL`** → add **`DATABASE_URL`** with the same value.
+3. Add auth vars:
    - `NEXTAUTH_URL` — `https://your-app.vercel.app`
-   - `NEXTAUTH_SECRET` — production secret
-4. Deploy — `vercel.json` runs `prisma db push` on build.
+   - `NEXTAUTH_SECRET` — [random secret](https://generate-secret.vercel.app/32)
+4. Redeploy. The build script uses PostgreSQL automatically (`scripts/vercel-build.sh`).
+
+**Build failed with `DATABASE_URL not found`?** You skipped step 2 — add that variable, then redeploy.
 
 ## Features
 
